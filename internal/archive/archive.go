@@ -11,26 +11,32 @@ import (
 
 const baseUrl = "https://archiveofourown.org"
 
-func GetWorkText(work string) ([]string, error) {
-	workRequest, err := http.Get(fmt.Sprintf("%s/works/%s", baseUrl, work))
+type Work struct {
+	Title string
+	Work  []string
+}
+
+func GetWork(workToFetch string) (Work, error) {
+	var work Work
+	workRequest, err := http.Get(fmt.Sprintf("%s/works/%s", baseUrl, workToFetch))
 	if err != nil {
-		return nil, err
+		return work, err
 	}
 	defer workRequest.Body.Close()
 	if workRequest.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("error retrieving work: status code %d",
+		return work, fmt.Errorf("error retrieving work: status code %d",
 			workRequest.StatusCode)
 	}
 	workDoc, err := goquery.NewDocumentFromReader(workRequest.Body)
 	if err != nil {
-		return nil, err
+		return work, err
 	}
-	var paragraphs []string
 	workDoc.Find("div.userstuff p").Each(func(i int, s *goquery.Selection) {
-		paragraphs = append(paragraphs, strings.TrimSpace(s.Text()))
+		work.Work = append(work.Work, strings.TrimSpace(s.Text()))
 	})
-	if len(paragraphs) == 0 {
-		return nil, errors.New("work not found in page")
+	if len(work.Work) == 0 {
+		return work, errors.New("work not found in page")
 	}
-	return paragraphs, nil
+	work.Title = strings.TrimSpace(workDoc.Find("h2.title").First().Text())
+	return work, nil
 }

@@ -3,18 +3,21 @@ package doc
 import (
 	"strings"
 	"text/template"
+
+	"github.com/tweakdeveloper/ao3pub2/internal/archive"
 )
 
 const workTemplate = `\documentclass{article}
 \usepackage{setspace} \doublespacing
 \usepackage[margin=1in]{geometry}
+\usepackage[pdftitle={ {{.Title}} }]{hyperref}
 \begin{document}
-{{range .}}\paragraph{}
+{{range .Work}}\paragraph{}
 {{.}}
 {{end}}\end{document}
 `
 
-func GetTemplateFromWork(work []string) (string, error) {
+func GetTemplateFromWork(work archive.Work) (string, error) {
 	workTemplate, err := template.New("work").Parse(workTemplate)
 	if err != nil {
 		return "", err

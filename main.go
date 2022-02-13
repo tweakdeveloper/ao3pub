@@ -26,12 +26,12 @@ func handleRoot(c *gin.Context) {
 }
 
 func handleSimpleWork(c *gin.Context) {
-	workText, err := archive.GetWorkText(c.Param("work"))
+	work, err := archive.GetWork(c.Param("work"))
 	if err != nil {
 		log.Print(err)
 		return
 	}
-	workTemplate, err := doc.GetTemplateFromWork(workText)
+	workTemplate, err := doc.GetTemplateFromWork(work)
 	if err != nil {
 		log.Print(err)
 		return
