@@ -1,8 +1,11 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"os/exec"
 
 	"github.com/gin-gonic/gin"
 
@@ -33,8 +36,22 @@ func handleSimpleWork(c *gin.Context) {
 		log.Print(err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"error": false,
-		"work":  workTemplate,
-	})
+	workTemplateFile, err := ioutil.TempFile("", "ao3pub_tex_*.tex")
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	workTemplateFileName := workTemplateFile.Name()
+	defer os.Remove(workTemplateFileName)
+	workTemplateFile.WriteString(workTemplate)
+	workTemplateFile.Close()
+	workOutFileName := workTemplateFileName[0:len(workTemplateFileName)-4] + ".pdf"
+	cmd := exec.Command("pdflatex", "-output-directory", os.TempDir(), workTemplateFileName)
+	err = cmd.Run()
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	defer os.Remove(workOutFileName)
+	c.File(workOutFileName)
 }
