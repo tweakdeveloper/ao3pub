@@ -6,6 +6,7 @@ import (
 )
 
 const workTemplate = `\documentclass{article}
+\usepackage{setspace} \doublespacing
 \begin{document}
 {{range .}}\paragraph{}
 {{.}}
