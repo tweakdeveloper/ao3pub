@@ -7,6 +7,7 @@ import (
 
 const workTemplate = `\documentclass{article}
 \usepackage{setspace} \doublespacing
+\usepackage[margin=1in]{geometry}
 \begin{document}
 {{range .}}\paragraph{}
 {{.}}
