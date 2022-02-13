@@ -8,6 +8,9 @@ import (
 )
 
 const workTemplate = `\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\MakeOuterQuote{"}
 \usepackage{setspace} \doublespacing
 \usepackage[margin=1in]{geometry}
 \usepackage[pdftitle={ {{.Title}} }]{hyperref}

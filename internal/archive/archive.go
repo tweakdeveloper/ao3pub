@@ -37,6 +37,23 @@ func GetWork(workToFetch string) (Work, error) {
 	if len(work.Work) == 0 {
 		return work, errors.New("work not found in page")
 	}
+	for i := 0; i < len(work.Work); i++ {
+		work.Work[i] = fixUnbalancedQuotes(work.Work[i])
+	}
 	work.Title = strings.TrimSpace(workDoc.Find("h2.title").First().Text())
 	return work, nil
+}
+
+func fixUnbalancedQuotes(text string) string {
+	unbalanced := false
+	for i := 0; i < len(text); i++ {
+		if text[i] == '"' {
+			unbalanced = !unbalanced
+		}
+	}
+	if unbalanced {
+		return text + "\""
+	} else {
+		return text
+	}
 }

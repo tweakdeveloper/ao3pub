@@ -7,7 +7,7 @@ ENV GIN_MODE=release
 
 WORKDIR /usr/src/app
 
-RUN apk add texlive
+RUN apk add texlive texmf-dist-latexextra
 
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
