@@ -1,4 +1,4 @@
-FROM golang:1.17
+FROM golang:1.17-alpine
 
 LABEL maintainer="Nolan Clark <tweakdeveloper@gmail.com>"
 
@@ -7,7 +7,7 @@ ENV GIN_MODE=release
 
 WORKDIR /usr/src/app
 
-RUN apt-get -y update && apt-get install -y pandoc latexmk
+RUN apk add texlive
 
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
