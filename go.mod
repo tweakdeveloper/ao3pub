@@ -1,4 +1,4 @@
-module github.com/tweakdeveloper/ao3pub2
+module github.com/tweakdeveloper/ao3pub
 
 go 1.17
 

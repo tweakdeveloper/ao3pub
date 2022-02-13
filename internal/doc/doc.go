@@ -4,7 +4,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/tweakdeveloper/ao3pub2/internal/archive"
+	"github.com/tweakdeveloper/ao3pub/internal/archive"
 )
 
 const workTemplate = `\documentclass{article}

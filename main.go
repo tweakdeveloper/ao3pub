@@ -9,8 +9,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/tweakdeveloper/ao3pub2/internal/archive"
-	"github.com/tweakdeveloper/ao3pub2/internal/doc"
+	"github.com/tweakdeveloper/ao3pub/internal/archive"
+	"github.com/tweakdeveloper/ao3pub/internal/doc"
 )
 
 func main() {
