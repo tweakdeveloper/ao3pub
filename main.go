@@ -17,7 +17,7 @@ func main() {
 	r := gin.Default()
 	r.SetTrustedProxies(nil)
 	r.GET("/", handleRoot)
-	r.GET("/works/:work", handleSimpleWork)
+	r.GET("/works/*work", handleWork)
 	r.Run()
 }
 
@@ -25,7 +25,7 @@ func handleRoot(c *gin.Context) {
 	c.String(http.StatusOK, "howdy!")
 }
 
-func handleSimpleWork(c *gin.Context) {
+func handleWork(c *gin.Context) {
 	work, err := archive.GetWork(c.Param("work"))
 	if err != nil {
 		log.Print(err)
