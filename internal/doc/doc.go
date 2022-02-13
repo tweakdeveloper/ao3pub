@@ -11,9 +11,11 @@ const workTemplate = `\documentclass{article}
 \usepackage{setspace} \doublespacing
 \usepackage[margin=1in]{geometry}
 \usepackage[pdftitle={ {{.Title}} }]{hyperref}
+\setlength{\parindent}{0.25in}
 \begin{document}
-{{range .Work}}\paragraph{}
+{{range .Work}}
 {{.}}
+
 {{end}}\end{document}
 `
 
