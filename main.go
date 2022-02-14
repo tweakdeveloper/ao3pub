@@ -28,6 +28,7 @@ func handleRoot(c *gin.Context) {
 }
 
 func handleWork(c *gin.Context) {
+	//isMultiPart := c.Query("view_full_work") == "true"
 	work, err := archive.GetWork(c.Param("work"))
 	if err != nil {
 		log.Print(err)
