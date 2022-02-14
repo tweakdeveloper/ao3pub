@@ -14,6 +14,9 @@ const workTemplate = `\documentclass{article}
 \usepackage{setspace} \doublespacing
 \usepackage[margin=1in]{geometry}
 \usepackage[pdftitle={ {{.Title}} }]{hyperref}
+\usepackage{fontspec}
+\setmainfont{Noto Serif CJK JP}
+\newfontfamily\DejaSans{DejaVu Sans}
 \setlength{\parindent}{0.25in}
 \begin{document}
 {{range .Work}}

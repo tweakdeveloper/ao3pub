@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -39,6 +40,7 @@ func GetWork(workToFetch string) (Work, error) {
 	}
 	for i := 0; i < len(work.Work); i++ {
 		work.Work[i] = fixUnbalancedQuotes(work.Work[i])
+		work.Work[i] = fixUnicodeChars(work.Work[i])
 	}
 	work.Title = strings.TrimSpace(workDoc.Find("h2.title").First().Text())
 	return work, nil
@@ -56,4 +58,16 @@ func fixUnbalancedQuotes(text string) string {
 	} else {
 		return text
 	}
+}
+
+func fixUnicodeChars(text string) string {
+	var textBuilder strings.Builder
+	for _, char := range text {
+		if unicode.IsSymbol(char) {
+			textBuilder.WriteString(fmt.Sprintf(`{\DejaSans %c}`, char))
+		} else {
+			textBuilder.WriteRune(char)
+		}
+	}
+	return textBuilder.String()
 }

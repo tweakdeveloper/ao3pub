@@ -48,7 +48,7 @@ func handleWork(c *gin.Context) {
 	workTemplateFile.WriteString(workTemplate)
 	workTemplateFile.Close()
 	workOutFileName := workTemplateFileName[0:len(workTemplateFileName)-4] + ".pdf"
-	cmd := exec.Command("pdflatex", "-output-directory", os.TempDir(), workTemplateFileName)
+	cmd := exec.Command("xelatex", "-output-directory", os.TempDir(), workTemplateFileName)
 	err = cmd.Run()
 	if err != nil {
 		log.Print(err)
