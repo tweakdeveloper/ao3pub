@@ -16,13 +16,15 @@ import (
 func main() {
 	r := gin.Default()
 	r.SetTrustedProxies(nil)
+	r.LoadHTMLGlob("frontend/*.html")
 	r.GET("/", handleRoot)
 	r.GET("/works/*work", handleWork)
+	r.Static("/assets", "./frontend")
 	r.Run()
 }
 
 func handleRoot(c *gin.Context) {
-	c.String(http.StatusOK, "howdy!")
+	c.HTML(http.StatusOK, "index.html", gin.H{})
 }
 
 func handleWork(c *gin.Context) {
