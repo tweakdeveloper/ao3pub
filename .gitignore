@@ -20,3 +20,6 @@ ao3pub2
 
 # Go workspace file
 go.work
+
+# Temporary files
+tmp/
