@@ -15,12 +15,12 @@ const workTemplate = `\documentclass{article}
 \usepackage[margin=1in]{geometry}
 \usepackage[pdftitle={ {{.Title}} }]{hyperref}
 \usepackage{fontspec}
-\setmainfont{Noto Serif CJK JP}
 \newfontfamily\DejaSans{DejaVu Sans}
+\usepackage{xeCJK}
+\IfFontExistsTF{Noto Serif JP}{\setCJKmainfont{Noto Serif JP}}{\setCJKmainfont{Noto Serif CJK JP}}
 \setlength{\parindent}{0.25in}
 \begin{document}
-{{range .Work}}
-{{.}}
+{{range .Work}}{{range .}}{{if .Italicized}}\textit{ {{- .Text -}} }{{else if .Bold}}\textbf{ {{- .Text -}} }{{else}} {{.Text}} {{end}}{{end}}
 
 {{end}}\end{document}
 `

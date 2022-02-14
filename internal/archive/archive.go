@@ -12,9 +12,17 @@ import (
 
 const baseUrl = "https://archiveofourown.org"
 
+type TextFragment struct {
+	Italicized bool
+	Bold       bool
+	Text       string
+}
+
+type Paragraph []TextFragment
+
 type Work struct {
 	Title string
-	Work  []string
+	Work  []Paragraph
 }
 
 func GetWork(workToFetch string) (Work, error) {
@@ -33,7 +41,18 @@ func GetWork(workToFetch string) (Work, error) {
 		return work, err
 	}
 	workDoc.Find("div.userstuff p").Each(func(i int, s *goquery.Selection) {
-		work.Work = append(work.Work, strings.TrimSpace(s.Text()))
+		var para Paragraph
+		s.Children().Each(func(j int, child *goquery.Selection) {
+			var fragment TextFragment
+			if child.Is("em") {
+				fragment.Italicized = true
+			} else if child.Is("b") {
+				fragment.Bold = true
+			}
+			fragment.Text = strings.TrimSpace(child.Text())
+			para = append(para, fragment)
+		})
+		work.Work = append(work.Work, para)
 	})
 	if len(work.Work) == 0 {
 		return work, errors.New("work not found in page")
@@ -46,28 +65,33 @@ func GetWork(workToFetch string) (Work, error) {
 	return work, nil
 }
 
-func fixUnbalancedQuotes(text string) string {
+func fixUnbalancedQuotes(text Paragraph) Paragraph {
 	unbalanced := false
 	for i := 0; i < len(text); i++ {
-		if text[i] == '"' {
-			unbalanced = !unbalanced
+		for j := 0; j < len(text[i].Text); j++ {
+			if text[i].Text[j] == '"' {
+				unbalanced = !unbalanced
+			}
 		}
 	}
 	if unbalanced {
-		return text + "\""
-	} else {
-		return text
+		lastFragment := len(text) - 1
+		text[lastFragment].Text = text[lastFragment].Text + "\""
 	}
+	return text
 }
 
-func fixUnicodeChars(text string) string {
-	var textBuilder strings.Builder
-	for _, char := range text {
-		if unicode.IsSymbol(char) {
-			textBuilder.WriteString(fmt.Sprintf(`{\DejaSans %c}`, char))
-		} else {
-			textBuilder.WriteRune(char)
+func fixUnicodeChars(text Paragraph) Paragraph {
+	for i := 0; i < len(text); i++ {
+		var textBuilder strings.Builder
+		for _, char := range text[i].Text {
+			if unicode.IsSymbol(char) {
+				textBuilder.WriteString(fmt.Sprintf(`{\DejaSans %c}`, char))
+			} else {
+				textBuilder.WriteRune(char)
+			}
 		}
+		text[i].Text = textBuilder.String()
 	}
-	return textBuilder.String()
+	return text
 }
